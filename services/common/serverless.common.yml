@@ -1,0 +1,13 @@
+tags:
+  CreatedBy: ServerlessFramework
+  Project: DaaS
+
+services:
+  message_pipeline:
+    name: DaaS-message-pipeline
+
+layers:
+  message_pipeline:
+    name: DaaS-message-pipeline-layer
+
+aws_region: ap-southeast-1

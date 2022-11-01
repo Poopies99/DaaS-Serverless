@@ -2,10 +2,61 @@ service: Serverless-DaaS
 
 frameworkVersion: '3'
 
+custom:
+  common: ${file(../common/serverless.common.yml)}
+  vars: ${file(configuration/config.yml)}
+
 provider:
   name: aws
+  lambdaHashingVersion: 20201221
   runtime: python3.8
+  region: ${self:custom.common.aws_region}
+  deploymentBucket:
+    name: ${self:custom.vars.s3_bucket_name}
+    blockPublicAccess: true
+    serverSideEncryption: AES256
+    tags: ${self:custom.common.tags}
+#  To be Completed for security reasons
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action: ${self:custom.vars.resource.secret.action}
+#      Resource: !Ref AutomationSecrets
 
 functions:
-  hello:
-    handler: handler.hello
+  message_pipeline:
+    name: func-${self:service}
+    timeout: ${self:custom.vars.lambda_config.timeout}
+    handler: ${self:custom.vars.lambda_config.handler}
+    memorySize: ${self:custom.vars.lambda_config.memory}
+    package:
+      patterns:
+        - "../../libpy/message_pipeline/*.py"
+#    layers:
+#      - ${cf:${self:custom.common.layers.message_pipeline.name}.LibsLambdaLayerQualifiedArn}
+#   Security Layer to be discussed
+#    url:
+#      authorizer: aws_iam
+#      cors:
+#        allowedOrigins: ${self:custom.vars.lambda_config.build_status.functional_url.origins}
+#        allowedMethods:
+#          - GET
+#          - POST
+#    environment:
+#      SECRET_KEY_PATH: ${self:custom.vars.resource.secret.secret_key_path}
+#      REGION_NAME: ${self:custom.common.aws_region}
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1

@@ -1,0 +1,6 @@
+s3_bucket_name: sls-s3-daas-deployments
+
+lambda_config:
+  timeout: 300
+  handler: handler.entrypoint
+  memory: 1024

@@ -2,79 +2,10 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "The AWS CloudFormation template for this Serverless application",
   "Resources": {
-    "ServerlessDeploymentBucket": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256"
-              }
-            }
-          ]
-        }
-      }
-    },
-    "ServerlessDeploymentBucketPolicy": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "ServerlessDeploymentBucket"
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Effect": "Deny",
-              "Principal": "*",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "ServerlessDeploymentBucket"
-                      },
-                      "/*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "ServerlessDeploymentBucket"
-                      }
-                    ]
-                  ]
-                }
-              ],
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": false
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "HelloLogGroup": {
+    "MessageUnderscorepipelineLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/Serverless-DaaS-dev-hello"
+        "LogGroupName": "/aws/lambda/func-Serverless-DaaS"
       }
     },
     "IamRoleLambdaExecution": {
@@ -119,7 +50,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/Serverless-DaaS-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/func-Serverless-DaaS:*"
                     }
                   ]
                 },
@@ -130,7 +61,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/Serverless-DaaS-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/func-Serverless-DaaS:*:*"
                     }
                   ]
                 }
@@ -154,20 +85,18 @@
         }
       }
     },
-    "HelloLambdaFunction": {
+    "MessageUnderscorepipelineLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "S3Bucket": {
-            "Ref": "ServerlessDeploymentBucket"
-          },
-          "S3Key": "serverless/Serverless-DaaS/dev/1667182129222-2022-10-31T02:08:49.222Z/Serverless-DaaS.zip"
+          "S3Bucket": "sls-s3-daas-deployments",
+          "S3Key": "serverless/Serverless-DaaS/dev/1667320929194-2022-11-01T16:42:09.194Z/Serverless-DaaS.zip"
         },
-        "Handler": "handler.hello",
+        "Handler": "handler.entrypoint",
         "Runtime": "python3.8",
-        "FunctionName": "Serverless-DaaS-dev-hello",
+        "FunctionName": "func-Serverless-DaaS",
         "MemorySize": 1024,
-        "Timeout": 6,
+        "Timeout": 300,
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -176,36 +105,56 @@
         }
       },
       "DependsOn": [
-        "HelloLogGroup"
+        "MessageUnderscorepipelineLogGroup"
       ]
     },
-    "HelloLambdaVersionVxKgwnhTKTH8Ug47LM1h2h23gmpJbnOFQC36eBy9pI": {
+    "MessageUnderscorepipelineLambdaVersionA04VQFmI9yFMiCHZ0LEHmU2k3PvL6G5XWXzsO7sDcqo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "HelloLambdaFunction"
+          "Ref": "MessageUnderscorepipelineLambdaFunction"
         },
-        "CodeSha256": "3gcwTyNLlysGaf98o/gxK6FHg3Yq4ZXE4LZdxzFfazY="
+        "CodeSha256": "HFQpwASndrxEC73D+aCEfuOy46TYWyuXKBQDabkNPc0="
+      }
+    },
+    "usersTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "usersTable",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "email",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "email",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
       }
     }
   },
   "Outputs": {
     "ServerlessDeploymentBucketName": {
-      "Value": {
-        "Ref": "ServerlessDeploymentBucket"
-      },
+      "Value": "sls-s3-daas-deployments",
       "Export": {
         "Name": "sls-Serverless-DaaS-dev-ServerlessDeploymentBucketName"
       }
     },
-    "HelloLambdaFunctionQualifiedArn": {
+    "MessageUnderscorepipelineLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersionVxKgwnhTKTH8Ug47LM1h2h23gmpJbnOFQC36eBy9pI"
+        "Ref": "MessageUnderscorepipelineLambdaVersionA04VQFmI9yFMiCHZ0LEHmU2k3PvL6G5XWXzsO7sDcqo"
       },
       "Export": {
-        "Name": "sls-Serverless-DaaS-dev-HelloLambdaFunctionQualifiedArn"
+        "Name": "sls-Serverless-DaaS-dev-MessageUnderscorepipelineLambdaFunctionQualifiedArn"
       }
     }
   }
