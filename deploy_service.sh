@@ -8,10 +8,10 @@ help() {
 cat << EOF
 
 Usage:
-$ $0 <SLS_FOLDER_PATH>
+$ $0 <SERVICE NAME>
 
 Example Usage:
-$ $0 services/message_pipeline
+$ $0 message_pipeline
 
 EOF
 exit 0;
@@ -25,20 +25,20 @@ fi
 
 
 cd $(dirname $0)
-
+echo $(dirname $0)
 
 AWS_REGION=${AWS_REGION:-ap-southeast-1}
-DIRECTORY=$1
+SERVICE=$1
 AUTO_DEPLOY=false
 
 
-if [ ! -d $DIRECTORY ]
+if [ ! -d "services/$SERVICE" ] && [ ! -d "layers/$SERVICE" ]
 then
   echo "$1 is not a valid directory"
   help
   exit 1
 
-elif [ ! -d "$DIRECTORY/.serverless" ]
+elif [ ! -d "services/$SERVICE/.serverless" ] && [ ! -d "services/$SERVICE/.serverless" ]
 then
   echo "$1 is not a serverless directory"
   help
@@ -55,7 +55,13 @@ else
   fi
 
   set -x
-  cd $DIRECTORY
+  cd "layers/$SERVICE"
+  sls deploy --region $AWS_REGION
+
+  cd ..
+  cd ..
+
+  cd "services/$SERVICE"
   sls deploy --region $AWS_REGION
   set +x
 

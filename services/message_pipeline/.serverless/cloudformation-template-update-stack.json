@@ -90,7 +90,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "sls-s3-daas-deployments",
-          "S3Key": "serverless/Serverless-DaaS/dev/1667320929194-2022-11-01T16:42:09.194Z/Serverless-DaaS.zip"
+          "S3Key": "serverless/Serverless-DaaS/dev/1667487700905-2022-11-03T15:01:40.905Z/message_pipeline.zip"
         },
         "Handler": "handler.entrypoint",
         "Runtime": "python3.8",
@@ -108,14 +108,14 @@
         "MessageUnderscorepipelineLogGroup"
       ]
     },
-    "MessageUnderscorepipelineLambdaVersionA04VQFmI9yFMiCHZ0LEHmU2k3PvL6G5XWXzsO7sDcqo": {
+    "MessageUnderscorepipelineLambdaVersiondUEw71TlVJNwHzudMD2lSdlkPzW5PFulb1ZxroSQ3c": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "MessageUnderscorepipelineLambdaFunction"
         },
-        "CodeSha256": "HFQpwASndrxEC73D+aCEfuOy46TYWyuXKBQDabkNPc0="
+        "CodeSha256": "2SY+Wr2eGBkieZm4KsRC6fMo521tgCYE996+5ve8klc="
       }
     },
     "usersTable": {
@@ -151,7 +151,7 @@
     "MessageUnderscorepipelineLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MessageUnderscorepipelineLambdaVersionA04VQFmI9yFMiCHZ0LEHmU2k3PvL6G5XWXzsO7sDcqo"
+        "Ref": "MessageUnderscorepipelineLambdaVersiondUEw71TlVJNwHzudMD2lSdlkPzW5PFulb1ZxroSQ3c"
       },
       "Export": {
         "Name": "sls-Serverless-DaaS-dev-MessageUnderscorepipelineLambdaFunctionQualifiedArn"

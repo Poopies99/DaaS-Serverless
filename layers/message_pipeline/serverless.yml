@@ -1,0 +1,25 @@
+service: DaaS-message_pipeline-layer
+
+custom:
+  vars: ${file(../../services/message_pipeline/configuration/config.yml)}
+  common: ${file(../../services/common/serverless.common.yml)}
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ${self:custom.common.aws_region, "ap-southeast-1"}
+  deploymentBucket:
+    name: ${self:custom.vars.s3_bucket_name}
+    blockPublicAccess: true
+    serverSideEncryption: AES256
+
+layers:
+  libs:
+    name: func-${self:service}
+    path: libs/build # Make sure to run ./build-all.sh before sls deploy
+    description: Holds python libs needed for DaaS.
+    compatibleRuntimes:
+      - python3.8
+    allowedAccounts:
+      - "*"
+    retain: true

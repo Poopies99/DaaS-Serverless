@@ -2,6 +2,11 @@ service: Serverless-DaaS
 
 frameworkVersion: '3'
 
+package:
+  individually: true
+  patterns:
+    - "!./*"
+
 custom:
   common: ${file(../common/serverless.common.yml)}
   vars: ${file(configuration/config.yml)}
@@ -28,9 +33,12 @@ functions:
     timeout: ${self:custom.vars.lambda_config.timeout}
     handler: ${self:custom.vars.lambda_config.handler}
     memorySize: ${self:custom.vars.lambda_config.memory}
+    layers:
+      - ${cf:${self:custom.common.layers.message_pipeline.name}.LibsLambdaLayerQualifiedArn}
     package:
       patterns:
         - "../../libpy/message_pipeline/*.py"
+        - "handler.py"
 #    layers:
 #      - ${cf:${self:custom.common.layers.message_pipeline.name}.LibsLambdaLayerQualifiedArn}
 #   Security Layer to be discussed
