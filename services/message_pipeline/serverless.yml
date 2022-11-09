@@ -34,7 +34,7 @@ functions:
     handler: ${self:custom.vars.lambda_config.handler}
     memorySize: ${self:custom.vars.lambda_config.memory}
     layers:
-      - ${cf:${self:custom.common.layers.message_pipeline.name}.LibsLambdaLayerQualifiedArn}
+      - ${cf:${self:custom.common.layers.message_pipeline.name}-${self:provider.stage}.LibsLambdaLayerQualifiedArn}
     package:
       patterns:
         - "../../libpy/message_pipeline/*.py"

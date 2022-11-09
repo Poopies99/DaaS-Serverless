@@ -10,6 +10,7 @@
       "runtime": "python3.8",
       "region": "ap-southeast-1",
       "deploymentBucket": "sls-s3-daas-deployments",
+      "stage": "dev",
       "versionFunctions": true,
       "deploymentBucketObject": {
         "name": "sls-s3-daas-deployments",
@@ -112,7 +113,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "sls-s3-daas-deployments",
-                "S3Key": "serverless/Serverless-DaaS/dev/1667487700905-2022-11-03T15:01:40.905Z/message_pipeline.zip"
+                "S3Key": "serverless/Serverless-DaaS/dev/1667998335255-2022-11-09T12:52:15.255Z/message_pipeline.zip"
               },
               "Handler": "handler.entrypoint",
               "Runtime": "python3.8",
@@ -124,20 +125,23 @@
                   "IamRoleLambdaExecution",
                   "Arn"
                 ]
-              }
+              },
+              "Layers": [
+                "arn:aws:lambda:ap-southeast-1:183341648852:layer:func-Serverless-DaaS-Layer:2"
+              ]
             },
             "DependsOn": [
               "MessageUnderscorepipelineLogGroup"
             ]
           },
-          "MessageUnderscorepipelineLambdaVersiondUEw71TlVJNwHzudMD2lSdlkPzW5PFulb1ZxroSQ3c": {
+          "MessageUnderscorepipelineLambdaVersionXr7yanB0SQOhcRbtSQUSFx4LnDQpExgC0meO4tiwUeM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MessageUnderscorepipelineLambdaFunction"
               },
-              "CodeSha256": "2SY+Wr2eGBkieZm4KsRC6fMo521tgCYE996+5ve8klc="
+              "CodeSha256": "qc7rqvBGKKyphBOxyIPl2FeIA+9K/WGqkUb4A05T1Io="
             }
           },
           "usersTable": {
@@ -173,7 +177,7 @@
           "MessageUnderscorepipelineLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MessageUnderscorepipelineLambdaVersiondUEw71TlVJNwHzudMD2lSdlkPzW5PFulb1ZxroSQ3c"
+              "Ref": "MessageUnderscorepipelineLambdaVersionXr7yanB0SQOhcRbtSQUSFx4LnDQpExgC0meO4tiwUeM"
             },
             "Export": {
               "Name": "sls-Serverless-DaaS-dev-MessageUnderscorepipelineLambdaFunctionQualifiedArn"
@@ -191,12 +195,12 @@
         },
         "services": {
           "message_pipeline": {
-            "name": "DaaS-message_pipeline"
+            "name": "Serverless-DaaS"
           }
         },
         "layers": {
           "message_pipeline": {
-            "name": "DaaS-message_pipeline-layer"
+            "name": "Serverless-DaaS-Layer"
           }
         },
         "aws_region": "ap-southeast-1"
@@ -217,6 +221,9 @@
         "timeout": 300,
         "handler": "handler.entrypoint",
         "memorySize": 1024,
+        "layers": {
+          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"MessageUnderscorepipelineLambdaFunction\"][\"Properties\"][\"Layers\"]"
+        },
         "package": {
           "patterns": [
             "../../libpy/message_pipeline/*.py",
@@ -228,7 +235,7 @@
         "memory": 1024,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "MessageUnderscorepipelineLambdaVersiondUEw71TlVJNwHzudMD2lSdlkPzW5PFulb1ZxroSQ3c"
+        "versionLogicalId": "MessageUnderscorepipelineLambdaVersionXr7yanB0SQOhcRbtSQUSFx4LnDQpExgC0meO4tiwUeM"
       }
     },
     "resources": {
@@ -270,7 +277,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/Serverless-DaaS/dev/code-artifacts",
         "deploymentBucket": "sls-s3-daas-deployments",
-        "artifactDirectoryName": "serverless/Serverless-DaaS/dev/1667487700905-2022-11-03T15:01:40.905Z"
+        "artifactDirectoryName": "serverless/Serverless-DaaS/dev/1667998335255-2022-11-09T12:52:15.255Z"
       },
       "custom": {
         "$ref": "$[\"service\"][\"custom\"]"
@@ -290,7 +297,7 @@
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/Serverless-DaaS/dev/1667487700905-2022-11-03T15:01:40.905Z",
+    "artifactDirectoryName": "serverless/Serverless-DaaS/dev/1667998335255-2022-11-09T12:52:15.255Z",
     "artifact": ""
   }
 }

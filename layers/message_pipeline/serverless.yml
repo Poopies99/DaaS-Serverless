@@ -1,4 +1,4 @@
-service: DaaS-message_pipeline-layer
+service: Serverless-DaaS-Layer
 
 custom:
   vars: ${file(../../services/message_pipeline/configuration/config.yml)}

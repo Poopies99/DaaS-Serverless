@@ -4,10 +4,10 @@ tags:
 
 services:
   message_pipeline:
-    name: DaaS-message_pipeline
+    name: Serverless-DaaS
 
 layers:
   message_pipeline:
-    name: DaaS-message_pipeline-layer
+    name: Serverless-DaaS-Layer
 
 aws_region: ap-southeast-1
